@@ -20,3 +20,12 @@ Students can upload notes on the platform, which can be viewed and downloaded by
 
 
 The entire application works in real-time using web sockets.
+
+
+TechStack:
+
+Front-End: React.js
+
+Back-End: Node.js, Express.js, Socket.io
+
+Database: MongoDB
