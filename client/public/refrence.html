@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <title>Title</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js'></script>
+</head>
+<body>
+<div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>Login/Create User</h3>
+    <div style='margin: 5px'><label for='ga_token'>ga_token :</label><input autocomplete='off' id='ga_token'
+                                                                            value='eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3YzcyNjE5ZDA5MzVhMjkwYzQxYzNmMDEwMTY3MTM4Njg1ZjdlNTMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMjY5NDc3OTA2MDQzLWFodTJlbmtjZW5lM25pY2JpcWhucGlhZ2VzZzZidGNrLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMjY5NDc3OTA2MDQzLWFodTJlbmtjZW5lM25pY2JpcWhucGlhZ2VzZzZidGNrLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAzNzc4NzM3NTQwMDE5MDQ5NTE3IiwiZW1haWwiOiJyYW5hZGhydXY5NzVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiIxRUFOajFLNWJGNG9uUlhWNHkzYm1RIiwibmFtZSI6IkRocnV2IFJhbmEiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EtL0FPaDE0R2lheGVVR2xvY2dycDgtLVNnR2NTR2picDdyYWJkZ0d3bldpbEtZLVE9czk2LWMiLCJnaXZlbl9uYW1lIjoiRGhydXYiLCJmYW1pbHlfbmFtZSI6IlJhbmEiLCJsb2NhbGUiOiJlbi1HQiIsImlhdCI6MTYzNjc4ODY5NSwiZXhwIjoxNjM2NzkyMjk1LCJqdGkiOiJlZjNkNGM1NTVlM2Y4MTllODIyMDRhM2NlMjMxODUxNzc0OTdlNWQ0In0.gPFtRCywhVkAkgRnVvR5OfjS9Y7Vimglq0lfSki5z5OR_LRHx0OjbhXpx8lmpLxvE58SsfaJxxfnjUow_wD-bIWKVBi_fiI7ic7DMMFFVVg6OM89ZyPwanIKs4EQqUugLQGfyVR35Hk7kGEO65fAk0RWbt8TRoYoLJJgpWsn7AdcTEU82qbOj6azqVlXaz9Dusz6jpcqtOPpN1mQaHIwhCzxqWqeH95BXmjkYITKADVDAocQs4N_2QVUhA185XDqDwvmAhFhTU0-B4BscABxFHY-19sEH1r-IQHzW5LlIW7mFF-IeYzEXh4PinN-ofFEuqr4mRys2hK1mxdk2yTLoA' />
+    </div>
+    <div style='margin: 5px'><label for='emailAddress'>emailAddress :</label><input autocomplete='off' id='emailAddress'
+                                                                                    value='1@gmail.com' />
+    </div>
+    <div style='margin: 5px'><label for='firstName'>firstName :</label><input autocomplete='off' id='firstName'
+                                                                              value='1' /></div>
+    <div style='margin: 5px'><label for='lastName'>lastName :</label><input autocomplete='off' id='lastName'
+                                                                            value='1' /></div>
+    <div style='margin: 5px'><label for='userImage'>userImage :</label><input autocomplete='off' id='userImage'
+                                                                              value='https://cataas.com/cat' /></div>
+    <div style='margin: 5px'>
+      <button onclick='login()'>login</button>
+    </div>
+    <div style='margin: 5px'>
+      <button onclick='postRequest("logout")'>logout</button>
+    </div>
+  </div>
+
+  <!-- NOTE::LIST -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>NOTE::LIST</h3>
+    <div style='margin: 5px'>
+      <button onclick='NOTE_LIST()'>NOTE_LIST</button>
+    </div>
+  </div>
+
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>SESSION REFRESH</h3>
+    <div style='margin: 5px'>
+      <button onclick='postRequest("ref_session")'>SESSION REFRESH</button>
+    </div>
+  </div>
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>Socket Root</h3>
+    <div style='margin: 5px'>
+      <button onclick='connect()'>connect</button>
+    </div>
+    <div style='margin: 5px'>
+      <button onclick='disconnect()'>disconnect</button>
+    </div>
+  </div>
+</div>
+
+<div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>TEST</h3>
+    <div style='margin: 5px'><label for='TEST'>Message : </label><input autocomplete='off' id='TEST'></div>
+    <div style='margin: 5px'>
+      <button onclick='TEST()'>TEST</button>
+    </div>
+  </div>
+
+  <!-- POST::CREATE -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>POST::CREATE</h3>
+    <!-- postTitle, postBody -->
+    <div style='margin: 5px'><label for='postTitle'>postTitle : </label><input autocomplete='off' id='postTitle'></div>
+    <div style='margin: 5px'><label for='postBody'>postBody : </label><input autocomplete='off' id='postBody'></div>
+    <div style='margin: 5px'>
+      <button onclick='POST_CREATE()'>POST_CREATE</button>
+    </div>
+  </div>
+
+  <!-- POST::LIST -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>POST::LIST</h3>
+    <!-- pageNumber -->
+    <div style='margin: 5px'><label for='pageNumber'>pageNumber : </label><input type='number' autocomplete='off'
+                                                                                 id='pageNumber'></div>
+    <div style='margin: 5px'><label for='pageOffset'>pageOffset : </label><input type='number' autocomplete='off'
+                                                                                 id='pageOffset'></div>
+    <div style='margin: 5px'>
+      <button onclick='POST_LIST()'>POST_LIST</button>
+    </div>
+  </div>
+
+  <!-- POST::GET -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>POST::GET</h3>
+    <!-- postId -->
+    <div style='margin: 5px'><label for='postId'>postId : </label><input autocomplete='off' id='postId'></div>
+    <div style='margin: 5px'>
+      <button onclick='POST_GET()'>POST_GET</button>
+    </div>
+  </div>
+
+  <!-- POST::ADD_COMMENT -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>POST::ADD_COMMENT</h3>
+    <!-- postId, parentId, commentBody -->
+    <div style='margin: 5px'><label for='postIdC'>postId : </label><input autocomplete='off' id='postIdC'></div>
+    <div style='margin: 5px'><label for='parentId'>parentId : </label><input autocomplete='off' id='parentId'></div>
+    <div style='margin: 5px'><label for='commentBody'>commentBody : </label><input autocomplete='off' id='commentBody'>
+    </div>
+    <div style='margin: 5px'>
+      <button onclick='POST_ADD_COMMENT()'>POST_ADD_COMMENT</button>
+    </div>
+  </div>
+
+  <!-- USER::GET -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>USER::GET</h3>
+    <!-- userId -->
+    <div style='margin: 5px'><label for='userId'>userId : </label><input autocomplete='off' id='userId'></div>
+    <div style='margin: 5px'>
+      <button onclick='USER_GET()'>USER_GET</button>
+    </div>
+  </div>
+
+  <!-- USER::GET_ONLINE -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>USER::GET_ONLINE</h3>
+    <div style='margin: 5px'>
+      <button onclick='USER_GET_ONLINE()'>USER_GET_ONLINE</button>
+    </div>
+  </div>
+
+  <!-- USER::LIST -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>USER::LIST</h3>
+    <div style='margin: 5px'>
+      <button onclick='USER_LIST()'>USER_LIST</button>
+    </div>
+  </div>
+
+  <!-- TALK::LIST -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>TALK::LIST</h3>
+    <div style='margin: 5px'>
+      <button onclick='TALK_LIST()'>TALK_LIST</button>
+    </div>
+  </div>
+
+  <!-- TALK::SEND -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>TALK::SEND</h3>
+    <!-- recipientUserId, message -->
+    <div style='margin: 5px'><label for='recipientUserId'>recipientUserId : </label><input autocomplete='off'
+                                                                                           id='recipientUserId'></div>
+    <div style='margin: 5px'><label for='message'>message : </label><input autocomplete='off' id='message'></div>
+    <div style='margin: 5px'>
+      <button onclick='TALK_SEND()'>TALK_SEND</button>
+    </div>
+  </div>
+
+  <!-- TALK::GET -->
+  <div style='border: 3px solid; float: left; padding: 5px; margin: 5px;'>
+    <h3>TALK::GET</h3>
+    <!-- talkId -->
+    <div style='margin: 5px'><label for='talkId'>talkId : </label><input autocomplete='off' id='talkId'></div>
+    <div style='margin: 5px'>
+      <button onclick='TALK_GET()'>TALK_GET</button>
+    </div>
+  </div>
+
+</div>
+</body>
+<script>
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  var serverUrl = 'https://localhost:5000/'
+  // const serverUrl = 'http://localhost:5000/';
+  const socket = io(serverUrl, {
+    path: '/iohost',
+    autoConnect: false,
+    reconnection: false,
+    cors: {
+      origin: '*'
+    },
+    transports: ['websocket']
+  })
+
+  ////////////////////////////////////////////////////
+
+  // ROOT
+
+  socket.on('connect', () => {
+    console.log('connected server')
+  })
+
+  socket.on('disconnect', () => {
+    console.log('disconnected server')
+  })
+
+  socket.on('error', err => {
+    console.log(err)
+  })
+
+  socket.on('connect_error', err => {
+    console.log(err)
+  })
+
+  // TEST
+
+  socket.on('TEST', data => {
+    console.log('TEST :', data)
+  })
+
+  // POST
+
+  socket.on('POST::NEW', data => {
+    console.log('POST::NEW :', data)
+  })
+
+  socket.on('POST::CREATE', data => {
+    console.log('POST::CREATE :', data)
+  })
+
+  socket.on('POST::LIST', data => {
+    console.log('POST::LIST :', data)
+  })
+
+  socket.on('POST::GET', data => {
+    console.log('POST::GET :', data)
+  })
+
+  socket.on('POST::ADD_COMMENT', data => {
+    console.log('POST::ADD_COMMENT :', data)
+  })
+
+  socket.on('POST::ADD_COMMENT::61939ffc15be8789059b4e14', data => {
+    console.log('POST::ADD_COMMENT::61939ffc15be8789059b4e14 :', data)
+  })
+
+  socket.on('USER::GET', data => {
+    console.log('USER::GET :', data)
+  })
+
+  socket.on('USER::LIST', data => {
+    console.log('USER::LIST :', data)
+  })
+
+  socket.on('USER::GET_ONLINE', data => {
+    console.log('USER::GET_ONLINE :', data)
+  })
+
+  socket.on('USER::STATUS::ON', data => {
+    console.log('USER::STATUS::ON :', data)
+  })
+
+  socket.on('USER::STATUS::OFF', data => {
+    console.log('USER::STATUS::OFF :', data)
+  })
+
+  socket.on('TALK::LIST', data => {
+    console.log('TALK::LIST :', data)
+  })
+
+  socket.on('TALK::SEND', data => {
+    console.log('TALK::SEND :', data)
+  })
+
+  socket.on('TALK::NEW', data => {
+    console.log('TALK::NEW :', data)
+  })
+
+  socket.on('TALK::GET', data => {
+    console.log('TALK::GET :', data)
+  })
+
+  ////////////////////////////////////////////////////
+
+  function socketEventEmitter(eventName, data) {
+    console.log(`Emitting => ${eventName}
+    data :`, data)
+    socket.emit(eventName, data)
+  }
+
+  function connect() {
+    socket.connect()
+    if (!socket.connected) {
+    }
+  }
+
+  function disconnect() {
+    if (socket.connected) {
+      socket.disconnect()
+    }
+  }
+
+  function TEST() {
+    let value = getInputValues('TEST')
+    socketEventEmitter('TEST', value)
+  }
+
+  function POST_CREATE() {
+    let data = getInputValues(['postTitle', 'postBody'])
+    socketEventEmitter('POST::CREATE', data)
+  }
+
+  function POST_LIST() {
+    let data = getInputValues(['pageOffset'])
+    socketEventEmitter('POST::LIST', data)
+  }
+
+  function POST_GET() {
+    let data = getInputValues(['postId'])
+    socketEventEmitter('POST::GET', data)
+  }
+
+  function POST_ADD_COMMENT() {
+    document.getElementById('postIdC').value = ''
+    let data = getInputValues(['postId', 'parentId', 'commentBody'])
+    socketEventEmitter('POST::ADD_COMMENT', data)
+  }
+
+  function USER_GET() {
+    let data = getInputValues(['userId'])
+    socketEventEmitter('USER::GET', data)
+  }
+
+  function USER_GET_ONLINE() {
+    socketEventEmitter('USER::GET_ONLINE', {})
+  }
+
+  function USER_LIST() {
+    socketEventEmitter('USER::LIST', {})
+  }
+
+  function TALK_LIST() {
+    socketEventEmitter('TALK::LIST', {})
+  }
+
+  function TALK_SEND() {
+    let data = getInputValues(['recipientUserId', 'message'])
+    socketEventEmitter('TALK::SEND', data)
+  }
+
+  function TALK_GET() {
+    let data = getInputValues(['talkId'])
+    socketEventEmitter('TALK::GET', data)
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  document.getElementById('postIdC').oninput = (event) => {
+    document.getElementById('postId').value = event.target.value;
+  }
+
+  function getInputValues(inputRefs) {
+    if (Array.isArray(inputRefs)) {
+      let data = {}
+      for (let i = 0; i < inputRefs.length; i++) {
+        let value = document.getElementById(inputRefs[i]).value
+        data[inputRefs[i]] = document.getElementById(inputRefs[i]).type === 'number' ? +value : value
+        document.getElementById(inputRefs[i]).value = ''
+      }
+      return data
+    } else {
+      let value = document.getElementById(inputRefs).value
+      document.getElementById(inputRefs).value = ''
+      return value
+    }
+  }
+
+  var serverUrl = 'https://localhost:5000/'
+  function postRequest(path, data, callback) {
+    let config = {
+      method: 'post',
+      url: serverUrl + path,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data || JSON.stringify({ data: 'test' })
+    }
+
+    axios(config)
+      .then(function(response) {
+        console.log(`/${path} :`, response.data)
+        if (callback) {
+          callback(response.data)
+        }
+      })
+      .catch(function(error) {
+        console.log(`/${path} :`, error)
+      })
+  }
+
+  function login() {
+    let data = JSON.stringify({
+      'ga_token': document.getElementById('ga_token').value,
+      user: {
+        emailAddress: document.getElementById('emailAddress').value,
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        userImage: document.getElementById('userImage').value
+      }
+    })
+    postRequest('google_auth', data, (res) => {
+      if (res.status) connect()
+    })
+  }
+
+  function NOTE_LIST() {
+    postRequest('notes/list', '')
+  }
+
+</script>
+</html>

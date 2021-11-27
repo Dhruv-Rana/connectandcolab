@@ -1,0 +1,134 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+const fs = require('fs')
+const path = require('path')
+
+// TODO: change in https in final
+const http = require('http')
+const https = require('https')
+
+const database = require('./../src/database')
+
+const logger = require('./../src/utilities/logger')
+
+const { uploadDir } = require('./../src/config/multer_uploads')
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir)
+}
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+// const app = require('./../src/app');
+// const io = require('./../src/socket');
+
+let server, app, io
+
+const port = normalizePort(process.env.PORT || 5000)
+
+/**
+ * HTTPS Server Options
+ */
+
+const httpsServerOptions = {
+  key: fs.readFileSync(
+    path.join(__dirname, '..', 'src', 'config', 'https', 'server.key')
+  ),
+  cert: fs.readFileSync(
+    path.join(__dirname, '..', 'src', 'config', 'https', 'server.cert')
+  ),
+}
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+database
+  .connect()
+  .then(async () => {
+    logger(
+      0,
+      __filename,
+      'ROOT::MONGOOSE CONNECT',
+      'mongoose connected mongodb'
+    )
+
+    app = require('./../src/app')
+    io = require('./../src/socket')
+
+    server = https.createServer(httpsServerOptions, app)
+    // server = http.createServer(app);
+
+    server.on('error', onError)
+    server.on('listening', onListening)
+
+    app.set('port', port)
+
+    server.listen(port)
+  })
+  .catch((error) => {
+    logger(
+      1,
+      __filename,
+      'ROOT::MONGOOSE CONNECT',
+      error,
+      'mongoose connection failed'
+    )
+  })
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10)
+
+  if (isNaN(port)) {
+    // named pipe
+    return val
+  }
+
+  if (port >= 0) {
+    // port number
+    return port
+  }
+
+  return false
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+
+  logger(
+    1,
+    __filename,
+    'ROOT::HTTPS LISTEN',
+    error,
+    'https listen failed on ' + bind
+  )
+
+  if (error.syscall !== 'listen') {
+    throw error
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  io.attach(server, require('./../src/config/socket'))
+  const address = server.address()
+  const bind =
+    typeof address === 'string' ? 'pipe ' + address : 'port ' + address.port
+  logger(0, __filename, 'ROOT::HTTPS LISTEN', 'Server Listening On ' + bind)
+}
