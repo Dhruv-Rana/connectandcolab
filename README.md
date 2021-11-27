@@ -1,3 +1,6 @@
+Website: https://connectandcolab.live
+(The Application has been deployed on Microsoft Azure)
+
 Connect and Collab is a web application, which helps students to connect and collaborate with each other in real time. This application can be very helpful in situations like pandemic. The main features of the application are:
 
 Student Authentication using Google Sign In:
@@ -17,6 +20,3 @@ Students can upload notes on the platform, which can be viewed and downloaded by
 
 
 The entire application works in real-time using web sockets.
-
-
-Website: https://connectandcolab.live
