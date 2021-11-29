@@ -3,7 +3,7 @@ Website: https://connectandcolab.live
 
 Demo: https://www.youtube.com/watch?v=6gagHBX4U1E
 
-Connect and Collab is a web application, which helps students to connect and collaborate with each other in real time. This application can be very helpful in situations like pandemic. The main features of the application are:
+Connect and Colab is a web application, which helps students to connect and collaborate with each other in real time. This application can be very helpful in situations like pandemic. The main features of the application are:
 
 Student Authentication using Google Sign In:
 Students can login to the platform by authorizing themselves using their Google Account.
